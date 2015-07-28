@@ -4,6 +4,18 @@ public class Graph {
 	ArrayList<Village> Villages;
 	ArrayList<Road>Roads;
 	
+	//Constructors
+	public Graph(){
+	}
+	//primary constructor
+	public Graph(ArrayList<Village> Villages, ArrayList<Road> Roads){
+		this.Villages = Villages;
+		this.Roads = Roads;
+		for (Road x: Roads){
+			this.setRoad(x);
+		}
+	}
+
 	//getters and setters for villages
 	public void setVillage(Village village){
 		Villages.add(village);
@@ -13,15 +25,14 @@ public class Graph {
 	}
 	
 	//getters and setters for roads
-	//everytime a road is added to the graph, it updates the incoming and outgoing connections of the villages
+	//Every time a road is added to the graph, it updates the incoming and outgoing connections of the villages
 	public void setRoad(Road road){
-		Roads.add(road);
 		Village fromvillage = road.getfrom();
 		Village tovillage = road.getto();
 		tovillage.getincoming().add(fromvillage);
 		fromvillage.getoutgoing().add(tovillage);
 	}
-	//everytime a road is deleted, it also updates the incoming and outgoing connections of the villages
+	//Every time a road is deleted, it also updates the incoming and outgoing connections of the villages
 	public void deleteRoad(Road road){
 		Village fromvillage = road.getfrom();
 		Village tovillage = road.getto();
@@ -33,9 +44,12 @@ public class Graph {
 		return Roads;
 	}
 	
-	//primary constructor
-	public void Graph(ArrayList<Village> x, ArrayList<Road> y){
-		Villages = x;
-		Roads = y;
+	public void printGraph(){
+		for(Village x:Villages){
+			x.printVillage();
+		}
+		for (Road x: Roads){
+			x.printRoad();
+		}
 	}
 }

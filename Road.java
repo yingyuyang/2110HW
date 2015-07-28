@@ -6,14 +6,18 @@ public class Road {
 	private Village to;
 	private int weight;
 	
-	//getters and setter for the ID, from, to, and weight
-	public void road(String a, Village b, Village c, int d){
+	//Constructors
+	
+	public Road(){
+	}
+	public Road(String a, Village b, Village c, int d){
 		roadID = a;
 		from = b;
 		to = c;
 		weight = d;
 	}
 	
+	//getters and setter for the ID, from, to, and weight
 	public void setfrom(Village x){
 		from = x;
 	}
@@ -31,5 +35,8 @@ public class Road {
 	}
 	public int getweight(){
 		return weight;
-	}	
+	}
+	public void printRoad(){
+		System.out.println("The road is between nodes: " + roadID);
+	}
 }

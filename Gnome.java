@@ -1,4 +1,3 @@
-import java.util.*;
 
 public class Gnome {
 	private Village finalV;

@@ -1,20 +1,57 @@
 import java.util.*;
 
-public class DAlgorithm {
+public class DAlg {
 	ArrayList<Village>Villages;
 	ArrayList<Road> Roads;
 	
-	Set<Village> checkedV;
-	Set<Village> frontierV;
-	Map<Village, Integer> distances;
-	Map<Village, Village> savepath;
+	HashSet<Village> checkedV;
+	HashSet<Village> frontierV;
+	HashMap<Village, Integer> distances;
+	HashMap<Village, Village> savepath;
 	
-	public void DAlgorithm(Graph x){
+	//Constructor
+	public DAlg(Graph x){
 		this.Villages = x.getVillages();
 		this.Roads = x.getRoads();
+		
+		checkedV = new HashSet<Village>();
+		frontierV = new HashSet<Village>();
+		distances = new HashMap<Village, Integer>();
+		savepath = new HashMap<Village, Village>();
 	}
 	
-	public void putStart(Village startV, Village endV){
+	//Getters and setters
+	public HashMap<Village, Integer> getdistances(){
+		return distances;
+	}
+	public HashSet<Village> getfrontierV(){
+		return frontierV;
+	}
+	public HashSet<Village> getcheckedV(){
+		return checkedV;
+	}
+	public HashMap<Village, Village>getsavepath(){
+		return savepath;
+	}
+	//Print statements for debugging
+	public void printfrontierV(){
+		for (Village x: frontierV){
+			x.printVillage();
+		}
+	}
+	public void printcheckedV(){
+		for (Village x: checkedV){
+			x.printVillage();
+		}
+	}
+	public static void printpath(LinkedList<Village> Villages){
+		for (Village x: Villages){
+			x.printVillage();
+		}
+	}
+
+	//Methods for DAlg
+	public void start(Village startV, Village endV){
 		checkedV = new HashSet<Village>();
 		frontierV = new HashSet<Village>();
 		distances = new HashMap<Village, Integer>();
@@ -25,29 +62,32 @@ public class DAlgorithm {
 		distances.put(startV, 0);
 		
 		while (!checkedV.contains(endV)){//as long as the destination is not met, keep on appending to checked and change distance
-			Village loopedV = closest(frontierV);//picks closest Village
+			Village loopedV = closest();//picks closest Village
 			shortestpathtoeachV(loopedV); //updates distance to surrounding, adds to frontier
 			checkedV.add(loopedV);//adds to checkedV;
-			frontierV.remove(loopedV);//removes from frontier
 		}
 	}
 		
 	//adds to distances the shortest path to each Village
 	public void shortestpathtoeachV(Village fromV){
 		ArrayList<Village> surroundingV = fromV.getoutgoing();
-		for (Village x: surroundingV){
-			if (shortest(x) > + shortest(x) + getroaddistance(fromV, x)){ //for X in surroundingV, if getDistance is smaller than the current Distance, replace it.
+		for (Village x: surroundingV){//Village1 is surrounding
+			if (shortest(x) > shortest(fromV) + getroaddistance(fromV, x)){ //for X in surroundingV, if getDistance is smaller than the current Distance, replace it.
 				distances.put(x, shortest(fromV) + getroaddistance(fromV, x));
 				savepath.put(x, fromV);
 				frontierV.add(x);
+				frontierV.remove(fromV);
 			}
 		}
 	}
 	//returns distance to village
 	public int shortest(Village village){
-		Integer shortest = distances.get(village);
-		if (shortest == null){
-			shortest = 2^31-1;
+		int shortest;
+		if (!distances.containsKey(village)){
+			shortest = 999999999;
+		}
+		else{
+			shortest = distances.get(village);
 		}
 		return shortest;
 	}
@@ -61,8 +101,8 @@ public class DAlgorithm {
 		throw new RuntimeException("Road does not exist");
 	}
 	
-	//returns next the closest village
-	public Village closest(Set<Village> frontierV){//checks from frontier villages and returns closest village;
+	//returns the next closest village
+	public Village closest(){//checks from frontier villages and returns closest village;
 		Village closestV = new Village();
 		for (Village x: frontierV){
 			if (distances.get(closestV) == null){
@@ -77,7 +117,7 @@ public class DAlgorithm {
 	
 	public LinkedList<Village> path(Village start, Village end){
 		LinkedList<Village> path = new LinkedList<Village>();
-		putStart(start, end);
+		start(start, end);
 		Village previous = new Village();
 		previous = end;
 		path.add(previous);
@@ -87,6 +127,15 @@ public class DAlgorithm {
 		}
 		return path;	
 	}
+	public static LinkedList<Village> reverse(LinkedList<Village> Villages){//why won't it override saved?  Nvrmind; it works! 
+		if(Villages.isEmpty()){
+			return Villages;
+		}
+		else{
+			Village nextstep = Villages.remove();
+			LinkedList x = reverse(Villages);
+			Villages.add(nextstep);
+			return Villages;
+		}
+	}
 }
-
-
