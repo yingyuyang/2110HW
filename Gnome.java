@@ -2,7 +2,7 @@
 public class Gnome {
 	private Village finalV;
 	private Village currentV;
-	private int Urgency = 0;
+	private boolean Urgency = true;// true means the gnome is in a lazy mode. false means in an urgent mode. 
 	
 	public void setfinalV(Village x){
 		finalV = x;
@@ -16,10 +16,10 @@ public class Gnome {
 	public Village getcurrentV(){
 		return currentV;
 	}
-	public void setCurrency(int x){
+	public void setUrgency(int x){
 		Urgency = 0;
 	}
-	public int getCurrency(){
+	public boolean getUrgency(){
 		return Urgency;
 	}
 	
