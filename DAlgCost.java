@@ -1,28 +1,31 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 
-public class DAlg {
+public class DAlgCost {
 	ArrayList<Village>Villages;
 	ArrayList<Road> Roads;
 	
 	HashSet<Village> checkedV;
 	HashSet<Village> frontierV;
-	HashMap<Village, Integer> distances;
+	HashMap<Village, Integer> costs;
 	HashMap<Village, Village> savepath;
 	
 	//Constructor
-	public DAlg(Graph x){
+	public DAlgCost(Graph x){
 		this.Villages = x.getVillages();
 		this.Roads = x.getRoads();
 		
 		checkedV = new HashSet<Village>();
 		frontierV = new HashSet<Village>();
-		distances = new HashMap<Village, Integer>();
+		costs = new HashMap<Village, Integer>();
 		savepath = new HashMap<Village, Village>();
 	}
 	
 	//Getters and setters
-	public HashMap<Village, Integer> getdistances(){
-		return distances;
+	public HashMap<Village, Integer> getcosts(){
+		return costs;
 	}
 	public HashSet<Village> getfrontierV(){
 		return frontierV;
@@ -54,49 +57,51 @@ public class DAlg {
 	public void start(Village startV, Village endV){
 		checkedV = new HashSet<Village>();
 		frontierV = new HashSet<Village>();
-		distances = new HashMap<Village, Integer>();
+		costs = new HashMap<Village, Integer>();
 		savepath = new HashMap<Village, Village>();
 		
 		checkedV.add(startV); //initializes frontier
 		frontierV.add(startV);
-		distances.put(startV, 0);
+		costs.put(startV, 0);
 		
-		while (!checkedV.contains(endV)){//as long as the destination is not met, keep on appending to checked and change distance
+		while (!checkedV.contains(endV)){//as long as the destination is not met, keep on appending to checked and change cost
 		//while (!frontierV.isEmpty()){	
 			Village nextV = this.closest();//picks closest Village
-			shortestpathtoeachV(nextV); //updates distance to surrounding, adds to frontier
+			shortestpathtoeachV(nextV); //updates costs to surrounding, adds to frontier
 			checkedV.add(nextV);//adds to checkedV;
 			frontierV.remove(nextV);
 		}
 	}
 		
-	//adds to distances the shortest path to each Village
+	//adds to cost the shortest path to each Village
 	public void shortestpathtoeachV(Village fromV){
 		ArrayList<Village> surroundingV = fromV.getoutgoing();
 		for (Village x: surroundingV){//Village1 is surrounding
-			if (shortest(x) > shortest(fromV) + getroaddistance(fromV, x)){ //for X in surroundingV, if getDistance is smaller than the current Distance, replace it.
-				distances.put(x, shortest(fromV) + getroaddistance(fromV, x));
+			if (cheapest(x) > cheapest(fromV) + getroadcost(fromV, x)){ //for X in surroundingV, if getCost is smaller than the current Cost, replace it.
+				costs.put(x, cheapest(fromV) + getroadcost(fromV, x));
 				savepath.put(x, fromV);
 				frontierV.add(x);
 			}
 		}
 	}
-	//returns distance to village
-	public int shortest(Village village){
+	//returns cost to village
+	public int cheapest(Village village){
 		int shortest;
-		if (!distances.containsKey(village)){
+		if (!costs.containsKey(village)){
 			shortest = 999999999;
 		}
 		else{
-			shortest = distances.get(village);
+			shortest = costs.get(village);
 		}
 		return shortest;
 	}
-	//returns the distance of the road given the two villages they connect;
-	public int getroaddistance(Village fromV, Village toV){ //why is it that when you throw an exception, you no longer have to meet the specifications
+	
+	//need to change this
+	//returns the cost of the road given the two villages they connect;
+	public int getroadcost(Village fromV, Village toV){ //why is it that when you throw an exception, you no longer have to meet the specifications
 		for (Road x: Roads){
 			if (x.getfrom() == fromV && x.getto() == toV){
-				return x.getLength();
+				return x.getCost();
 			}
 		}
 		throw new RuntimeException("Road does not exist");
@@ -106,10 +111,10 @@ public class DAlg {
 	public Village closest(){//checks from frontier villages and returns closest village;
 		Village closestV = new Village();
 		for (Village x: frontierV){
-			if (distances.get(closestV) == null){
+			if (costs.get(closestV) == null){
 				closestV = x;
 			}
-			if (distances.get(x) < distances.get(closestV)){//this will throw null;
+			if (costs.get(x) < costs.get(closestV)){//this will throw null;
 				closestV = x;
 			}
 		}

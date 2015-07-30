@@ -4,7 +4,8 @@ public class Road {
 	private String roadID; //not sure if exactly needed;
 	private Village from;
 	private Village to;
-	private int weight;
+	private int length = 0;
+	private int cost = 0;
 	
 	//Constructors
 	
@@ -14,7 +15,14 @@ public class Road {
 		roadID = a;
 		from = b;
 		to = c;
-		weight = d;
+		length = d;
+	}
+	public Road(String a, Village b, Village c, int d, int e){
+		roadID = a;
+		from = b;
+		to = c;
+		length = d;
+		cost = e;
 	}
 	
 	//getters and setter for the ID, from, to, and weight
@@ -30,11 +38,17 @@ public class Road {
 	public Village getto(){
 		return to;
 	}
-	public void setweight(int x){
-		weight = x;
+	public void setLength(int x){
+		length = x;
 	}
-	public int getweight(){
-		return weight;
+	public int getLength(){
+		return length;
+	}
+	public void setCost(int x){
+		cost = x;
+	}
+	public int getCost(){
+		return cost;
 	}
 	public void printRoad(){
 		System.out.println("The road is between nodes: " + roadID);

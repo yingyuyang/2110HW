@@ -1,76 +1,12 @@
+//This class is another class to test methods and functions
+//It currently tests: Deletion of villages,
+
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 
-public class TopoSort {
-	private ArrayList<Village> Villages;
-	private ConcurrentHashMap<Village, Integer> villageIncoming;
-	
-	//Constructors
-	public TopoSort(){
-	}
-	
-	public TopoSort (Graph graph){
-		Villages = graph.getVillages();
-		villageIncoming = new ConcurrentHashMap<Village, Integer>();
-		for (Village x: Villages){
-			villageIncoming.put(x, x.getincoming().size());
-		}
-	}
-	
-	//Getters and setters
-	public ArrayList<Village> getVillages(){
-		return Villages;
-	}
-	public void printVillages(){
-		for (Village x: Villages){
-			x.printVillage();
-		}
-	}
-	public ConcurrentHashMap<Village, Integer> getvillageIncoming(){
-		return villageIncoming;
-	}
-	public void printvillageIncoming(){
-		System.out.println("The key sets are: ");
-		for (Village x: villageIncoming.keySet()){
-			x.printVillage();;
-		}	
-		System.out.println("The value sets are: ");
-		for (Integer x: villageIncoming.values()){
-			System.out.println(x);
-		}
-	}
-	
-	//Implements topological sort via HashMap
-	//will throw RuntimeException if there is a cycle in the graph
-	public ArrayList<Village> Sort(){
-		ArrayList<Village> Sorted = new ArrayList<Village>();
-		while (villageIncoming.containsValue(0)){
-			for (Village x: villageIncoming.keySet()){
-				if (villageIncoming.get(x) == 0){
-					villageIncoming.remove(x);
-					for (Village y: x.getoutgoing()){
-						villageIncoming.put(y, villageIncoming.get(y) - 1);
-					}
-					Sorted.add(x);
-				}
-			}
-		}
-		if (!villageIncoming.containsValue(0)){
-			if (!villageIncoming.isEmpty()){
-				throw new RuntimeException("There is a cycle in the graph");
-			}
-		}
-		return Sorted;
-	}
-	public static void printSorted(ArrayList<Village> Villages){
-		for (Village x: Villages){
-			x.printVillage();
-		}
-	}
-	
-	public static void main(String[] args) {
+public class TestClass {
+
+	public static void main(String[]Args){
 		/////////////////////////////////////////////////////////////////////////////////////
 		///////////////////INITIALIZES EVERYTHING////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////
@@ -128,12 +64,16 @@ public class TopoSort {
 	///////////////////INITIALIZES EVERYTHING////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////
 	
-	
-	//Adds graph to TopoSort
-	TopoSort TopoSort = new TopoSort(graph);
-	System.out.println("_____________________________________________________");
-	System.out.println("TopologicalSort: Correct (Should be 2,1,0)");
-	printSorted(TopoSort.Sort());
-	}
+	graph.printGraph();
 
+	System.out.println("________________________________");
+	System.out.println("deleteVillagenadRoads: correct");
+	//graph.deleteVillageandRoads(Village3);
+	//graph.printGraph();
+	System.out.println("________________________________");
+	System.out.println("deleteVillageOnly: correct");
+	graph.deleteVillageOnly(Village1);
+	graph.printArrayListRoad(Roads);
+
+	}
 }
