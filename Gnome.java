@@ -16,8 +16,8 @@ public class Gnome {
 	public Village getcurrentV(){
 		return currentV;
 	}
-	public void setUrgency(int x){
-		Urgency = 0;
+	public void setUrgency(boolean x){
+		this.Urgency = x;
 	}
 	public boolean getUrgency(){
 		return Urgency;
