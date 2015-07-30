@@ -62,9 +62,11 @@ public class DAlg {
 		distances.put(startV, 0);
 		
 		while (!checkedV.contains(endV)){//as long as the destination is not met, keep on appending to checked and change distance
-			Village loopedV = closest();//picks closest Village
-			shortestpathtoeachV(loopedV); //updates distance to surrounding, adds to frontier
-			checkedV.add(loopedV);//adds to checkedV;
+		//while (!frontierV.isEmpty()){	
+			Village nextV = this.closest();//picks closest Village
+			shortestpathtoeachV(nextV); //updates distance to surrounding, adds to frontier
+			checkedV.add(nextV);//adds to checkedV;
+			frontierV.remove(nextV);
 		}
 	}
 		
@@ -76,7 +78,6 @@ public class DAlg {
 				distances.put(x, shortest(fromV) + getroaddistance(fromV, x));
 				savepath.put(x, fromV);
 				frontierV.add(x);
-				frontierV.remove(fromV);
 			}
 		}
 	}
@@ -114,19 +115,6 @@ public class DAlg {
 		}
 		return closestV;
 	}
-	
-	public LinkedList<Village> path(Village start, Village end){
-		LinkedList<Village> path = new LinkedList<Village>();
-		start(start, end);
-		Village previous = new Village();
-		previous = end;
-		path.add(previous);
-		while (savepath.get(previous) != null){
-			path.add(savepath.get(previous));
-			previous = savepath.get(previous);
-		}
-		return path;	
-	}
 	public static LinkedList<Village> reverse(LinkedList<Village> Villages){//why won't it override saved?  Nvrmind; it works! 
 		if(Villages.isEmpty()){
 			return Villages;
@@ -137,5 +125,20 @@ public class DAlg {
 			Villages.add(nextstep);
 			return Villages;
 		}
+	}
+	public LinkedList<Village> path(Village start, Village end){
+		LinkedList<Village> path = new LinkedList<Village>();
+		start(start, end);
+		Village previous = new Village();
+		previous = end;
+		path.add(previous);
+		while (savepath.get(previous) != null){
+			path.add(savepath.get(previous));
+			previous = savepath.get(previous);
+		}
+		return reverse(path);	
+	}
+	public static void main(String[]Args){
+		
 	}
 }
