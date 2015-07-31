@@ -61,7 +61,8 @@ public class DAlg {
 		frontierV.add(startV);
 		distances.put(startV, 0);
 		
-		while (!checkedV.contains(endV)){//as long as the destination is not met, keep on appending to checked and change distance
+		while (!checkedV.contains(endV)){
+		//as long as the destination is not met, keep on appending to checked and change distance
 		//while (!frontierV.isEmpty()){	
 			Village nextV = this.closest();//picks closest Village
 			shortestpathtoeachV(nextV); //updates distance to surrounding, adds to frontier
@@ -74,7 +75,8 @@ public class DAlg {
 	public void shortestpathtoeachV(Village fromV){
 		ArrayList<Village> surroundingV = fromV.getoutgoing();
 		for (Village x: surroundingV){//Village1 is surrounding
-			if (shortest(x) > shortest(fromV) + getroaddistance(fromV, x)){ //for X in surroundingV, if getDistance is smaller than the current Distance, replace it.
+			if (shortest(x) > shortest(fromV) + getroaddistance(fromV, x)){ 
+			//for X in surroundingV, if getDistance is smaller than the current Distance, replace it.
 				distances.put(x, shortest(fromV) + getroaddistance(fromV, x));
 				savepath.put(x, fromV);
 				frontierV.add(x);
@@ -92,8 +94,10 @@ public class DAlg {
 		}
 		return shortest;
 	}
-	//returns the distance of the road given the two villages they connect;
-	public int getroaddistance(Village fromV, Village toV){ //why is it that when you throw an exception, you no longer have to meet the specifications
+	
+	/**returns the distance of the road given the two villages they connect.*/
+	public int getroaddistance(Village fromV, Village toV){ 
+	//why is it that when you throw an exception, you no longer have to meet the specifications
 		for (Road x: Roads){
 			if (x.getfrom() == fromV && x.getto() == toV){
 				return x.getLength();
@@ -115,7 +119,8 @@ public class DAlg {
 		}
 		return closestV;
 	}
-	public static LinkedList<Village> reverse(LinkedList<Village> Villages){//why won't it override saved?  Nvrmind; it works! 
+	public static LinkedList<Village> reverse(LinkedList<Village> Villages){
+		//why won't it override saved?  Nvrmind; it works! 
 		if(Villages.isEmpty()){
 			return Villages;
 		}
