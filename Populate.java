@@ -1,103 +1,67 @@
 import java.util.*;
+import java.util.Map.Entry;
 
+public class Populate implements Runnable {
+	ArrayList<Gnome> gnomes;
+	Graph graph;
+	HashMap<Village, ArrayList<Gnome>> wherethegnomesare;
+	HashMap<Integer, String> stringforGUI;
+	
+	public Populate(ArrayList<Gnome> gnomes, Graph graph){
+		this.gnomes = gnomes;
+		this.graph = graph;
+		wherethegnomesare = new HashMap<Village, ArrayList<Gnome>>();
+		stringforGUI = new HashMap<Integer, String>();
+	}
 
-public class Gnome implements Runnable {
-	//private static final int STARTING_ID = 10000;
-	//private static int numMade = 0;
-	//private int id;
-	private String name;
-	
-	private Village currentV;
-	private Village finalV;
-	private ArrayList<Village> history;
-	
-	private Graph graph;
-	private boolean urgency;
-	
-	//constructor
-	public Gnome(String name, Village currentV, Graph graph){
-		this.name = name;
-		this.currentV = currentV;
-		this.finalV = null;
-		this.history = new ArrayList<Village>();
-		this.graph = graph;
-		this.urgency = false;
-	}
-	public Gnome(String name, Village currentV, Village finalV, Graph graph){
-		this.name = name;
-		this.currentV = currentV;
-		this.finalV = finalV;
-		this.history = new ArrayList<Village>();
-		this.graph = graph;
-		this.urgency = false;
+	public void printstringforGUI(){
+		for (Entry<Integer, String> x: stringforGUI.entrySet()){
+		System.out.println(x.getKey());
+		System.out.println (x.getValue());
+		}
 	}
 	
-	public void setname(String string){
-		name = string;
-	}
-	public String getname(){
-		return name;
-	}
-	public void setfinalV(Village x){
-		finalV = x;
-	}
-	public Village getfinalV(){
-		return finalV;
-	}
-	public void setcurrentV(Village x){
-		currentV = x;
-	}
-	public Village getcurrentV(){
-		return currentV;
-	}
-	public void setCurrency(boolean x){
-		urgency = x;
-	}
-	public boolean getCurrency(){
-		return urgency;
-	}
-	/***Moves Gnome directly to final destination via shortest path*/
-	public void haulass(){
-		DAlg DAlg = new DAlg(graph);
-		LinkedList<Village> path = DAlg.path(currentV, finalV);
-			try {
-				for (Village x: path){
-				Thread.sleep(1000);
-				currentV = x;
-				currentV.printVillage();
-				history.add(currentV);
-				}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-		}	
+	public void update(){
+		wherethegnomesare = new HashMap<Village, ArrayList<Gnome>>();
+		int size = graph.getVillages().size();
+		for (Village x: graph.getVillages()){
+			ArrayList<Gnome> gnomeArray = new ArrayList<Gnome>();
+			wherethegnomesare.put(x, gnomeArray);
+		}
+		for (Gnome gnome: gnomes){
+			Village tempVillage = gnome.getcurrentV(); //grabs the currentV
+			ArrayList<Gnome> gnomeArray = wherethegnomesare.get(tempVillage);
+			gnomeArray.add(gnome);
+		}
+		for (Entry<Village, ArrayList<Gnome>> entry: wherethegnomesare.entrySet()){
+			Village tempVillage = entry.getKey();
+			ArrayList<Gnome> tempArray = entry.getValue();
+			String string = "";
+			for (Gnome x: tempArray){
+				string = string + "-" + x.getname();
+			}
+			stringforGUI.put(tempVillage.getcoordinate(), string);
+		}
 	}
 	
 	public void run() {
-		while (finalV == null){
+		while (true){
 			try {
 				Thread.sleep(1000);
-				int number = currentV.getoutgoing().size();
-				//System.out.println("The size of number is: " + number);
-				if (number == 0){
-					currentV = currentV;
-				}
-				else{
-					int randomNum = (int) (number*Math.random()+0);
-					currentV = currentV.getoutgoing().get(randomNum);					history.add(currentV);
-					//System.out.print(name + "is at: ");
-					//currentV.printVillage();
-					}
-				}
-			catch (InterruptedException e) {
+				update();
+				//printstringforGUI();
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 		}
-		haulass();
 	}
 	
+	
 	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
 		/////////////////////////////////////////////////////////////////////////////////////
 		///////////////////INITIALIZES EVERYTHING////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////
@@ -136,28 +100,44 @@ public class Gnome implements Runnable {
 		
 		ArrayList<Road> Roads = new ArrayList<Road>();
 		Roads.add(Road01);
-		//Roads.add(Road10);
+		Roads.add(Road10);
 		Roads.add(Road12);
-		//Roads.add(Road21);
+		Roads.add(Road21);
 		Roads.add(Road02);
-		//Roads.add(Road20);
+		Roads.add(Road20);
 		Roads.add(Road13);
-		//Roads.add(Road31);
+		Roads.add(Road31);
 		Roads.add(Road34);
-		//Roads.add(Road43);
+		Roads.add(Road43);
 		Roads.add(Road15);
-		//Roads.add(Road51);
+		Roads.add(Road51);
 		Roads.add(Road25);
-		//Roads.add(Road52);
+		Roads.add(Road52);
 		
 		Graph graph = new Graph(Villages, Roads);
 		/////////////////////////////////////////////////////////////////////////////////////
 		///////////////////INITIALIZES EVERYTHING////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////
 
-		Gnome Gnome1 = new Gnome("Gnome1", Village4, graph);
-		Gnome1.setfinalV(Village0);
+		Gnome Gnome1 = new Gnome("Gnome1", Village0, graph);
+		//Gnome1.setfinalV(Village4);
 		Thread Thread1 = new Thread(Gnome1); 
 		Thread1.start();
+		Gnome1.setfinalV(Village0);
+
+		Gnome Gnome2 = new Gnome("Gnome2", Village0, graph);
+		Thread Thread2 = new Thread(Gnome2); 
+		Thread2.start();
+		
+		ArrayList<Gnome> gnomeArray = new ArrayList<Gnome>();
+		gnomeArray.add(Gnome1);
+		gnomeArray.add(Gnome2);
+		
+		Populate Populate = new Populate(gnomeArray, graph);
+		Thread ThreadPopulate = new Thread(Populate);
+		ThreadPopulate.start();
+		
+	
+		
 	}
 }
