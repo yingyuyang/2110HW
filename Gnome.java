@@ -50,10 +50,10 @@ public class Gnome implements Runnable {
 	public Village getcurrentV(){
 		return currentV;
 	}
-	public void setCurrency(boolean x){
+	public void setUrgency(boolean x){
 		urgency = x;
 	}
-	public boolean getCurrency(){
+	public boolean getUrgency(){
 		return urgency;
 	}
 	/***Moves Gnome directly to final destination via shortest path*/
@@ -78,7 +78,6 @@ public class Gnome implements Runnable {
 			try {
 				Thread.sleep(1000);
 				int number = currentV.getoutgoing().size();
-				//System.out.println("The size of number is: " + number);
 				if (number == 0){
 					currentV = currentV;
 				}
@@ -86,13 +85,34 @@ public class Gnome implements Runnable {
 					int randomNum = (int) (number*Math.random()+0);
 					currentV = currentV.getoutgoing().get(randomNum);					history.add(currentV);
 					//System.out.print(name + "is at: ");
-					//currentV.printVillage();
+					currentV.printVillage();
 					}
 				}
 			catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		if(urgency == false){
+			for (int i = 0; i < 5;i++){
+				try {
+					Thread.sleep(1000);
+					int number = currentV.getoutgoing().size();
+					if (number == 0){
+						currentV = currentV;
+					}
+					else{
+						int randomNum = (int) (number*Math.random()+0);
+						currentV = currentV.getoutgoing().get(randomNum);					history.add(currentV);
+						//System.out.print(name + "is at: ");
+						currentV.printVillage();
+						}
+					}
+				catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				}
 		}
 		haulass();
 	}
@@ -136,27 +156,28 @@ public class Gnome implements Runnable {
 		
 		ArrayList<Road> Roads = new ArrayList<Road>();
 		Roads.add(Road01);
-		//Roads.add(Road10);
+		Roads.add(Road10);
 		Roads.add(Road12);
-		//Roads.add(Road21);
+		Roads.add(Road21);
 		Roads.add(Road02);
-		//Roads.add(Road20);
+		Roads.add(Road20);
 		Roads.add(Road13);
-		//Roads.add(Road31);
+		Roads.add(Road31);
 		Roads.add(Road34);
-		//Roads.add(Road43);
+		Roads.add(Road43);
 		Roads.add(Road15);
-		//Roads.add(Road51);
+		Roads.add(Road51);
 		Roads.add(Road25);
-		//Roads.add(Road52);
+		Roads.add(Road52);
 		
 		Graph graph = new Graph(Villages, Roads);
 		/////////////////////////////////////////////////////////////////////////////////////
 		///////////////////INITIALIZES EVERYTHING////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////
 
-		Gnome Gnome1 = new Gnome("Gnome1", Village4, graph);
-		Gnome1.setfinalV(Village0);
+		Gnome Gnome1 = new Gnome("Gnome1", Village0, graph);
+		//Gnome1.setUrgency(true);
+		Gnome1.setfinalV(Village5);
 		Thread Thread1 = new Thread(Gnome1); 
 		Thread1.start();
 	}

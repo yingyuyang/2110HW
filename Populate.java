@@ -49,7 +49,7 @@ public class Populate implements Runnable {
 			try {
 				Thread.sleep(1000);
 				update();
-				//printstringforGUI();
+				printstringforGUI();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -123,7 +123,7 @@ public class Populate implements Runnable {
 		//Gnome1.setfinalV(Village4);
 		Thread Thread1 = new Thread(Gnome1); 
 		Thread1.start();
-		Gnome1.setfinalV(Village0);
+		Gnome1.setfinalV(Village5);
 
 		Gnome Gnome2 = new Gnome("Gnome2", Village0, graph);
 		Thread Thread2 = new Thread(Gnome2); 
@@ -136,8 +136,5 @@ public class Populate implements Runnable {
 		Populate Populate = new Populate(gnomeArray, graph);
 		Thread ThreadPopulate = new Thread(Populate);
 		ThreadPopulate.start();
-		
-	
-		
 	}
 }
